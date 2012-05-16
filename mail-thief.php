@@ -9,6 +9,11 @@ add_action( 'init', 'appthemes_mail_thief_setup' );
 add_action( 'wp_mail', 'appthemes_mail_thief_block_email', 9 );
 add_action( 'appthemes_blocked_email', 'appthemes_mail_thief_mail_handler' );
 
+if( is_admin() ){
+	add_filter( 'manage_' . APPTHEMES_MAIL_THIEF_PTYPE . '_posts_columns', 'appthemes_mail_thief_manage_columns' );
+	add_action( 'manage_' . APPTHEMES_MAIL_THIEF_PTYPE . '_posts_custom_column', 'appthemes_mail_thief_add_column_data', 10, 2 );
+}
+
 function appthemes_mail_thief_setup(){
 
 	$labels = array(
@@ -65,5 +70,29 @@ function appthemes_mail_thief_mail_handler( $args ){
 	) );
 	
 	add_post_meta( $id, 'to_address', $args['to'] );
+
+}
+
+function appthemes_mail_thief_manage_columns( $columns ) {
+	
+	$date_column = $columns['date'];
+	unset($columns['date']);
+	
+	$columns['to'] = __( 'Sent To', APP_TD );
+	$columns['date'] = $date_column;
+	
+	return $columns;
+
+}
+
+function appthemes_mail_thief_add_column_data( $column_index, $post_id ) {
+
+	switch( $column_index ){
+	
+		case 'to':
+			echo get_post_meta( $post_id, 'to_address', true );
+			break;
+	
+	}
 
 }

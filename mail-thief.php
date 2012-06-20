@@ -1,6 +1,11 @@
 <?php
 /*
 Plugin Name: Mail Thief
+Description: Allows developers to log emails sent out via Wordpress instead of sending them.
+
+Version: dev
+Author: AppThemes
+Author URI: http://appthemes.com
 */
 
 define( 'APPTHEMES_MAIL_THIEF_PTYPE', 'email' );
@@ -34,7 +39,7 @@ function appthemes_mail_thief_setup(){
 	$args = array(
 		'labels' => $labels,
 		'hierarchical' => false,
-		'supports' => array( 'editor', 'custom-fields' ),
+		'supports' => array( 'title', 'editor', 'custom-fields' ),
 		'public' => false,
 		'show_ui' => true,
 	);

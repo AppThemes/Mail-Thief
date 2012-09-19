@@ -50,19 +50,16 @@ function appthemes_mail_thief_setup(){
 
 function appthemes_mail_thief_block_email( $args ){
 
-	global $current_user;
-	get_currentuserinfo();
-	
 	if( ! current_user_can('administrator') )
 		return $args;
-	
-    if( $current_user->user_email == $args['to'] ){
-    
-    	do_action( 'appthemes_blocked_email', $args );
-    	$args['to'] = 'example@example.com';
-    	
-    }
-	
+
+	if( wp_get_current_user()->user_email == $args['to'] ){
+
+		do_action( 'appthemes_blocked_email', $args );
+		$args['to'] = 'example@example.com';
+
+	}
+
 	return $args;
 }
 
@@ -73,19 +70,19 @@ function appthemes_mail_thief_mail_handler( $args ){
 		'post_title' => $args['subject'],
 		'post_content' => $args['message']
 	) );
-	
+
 	add_post_meta( $id, 'to_address', $args['to'] );
 
 }
 
 function appthemes_mail_thief_manage_columns( $columns ) {
-	
+
 	$date_column = $columns['date'];
 	unset($columns['date']);
-	
+
 	$columns['to'] = __( 'Sent To', APP_TD );
 	$columns['date'] = $date_column;
-	
+
 	return $columns;
 
 }
@@ -93,11 +90,11 @@ function appthemes_mail_thief_manage_columns( $columns ) {
 function appthemes_mail_thief_add_column_data( $column_index, $post_id ) {
 
 	switch( $column_index ){
-	
+
 		case 'to':
 			echo get_post_meta( $post_id, 'to_address', true );
 			break;
-	
+
 	}
 
 }
